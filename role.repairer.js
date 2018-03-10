@@ -1,34 +1,35 @@
 const roleBuilder = require('role.builder');
+const findEnergy = require('find.energy');
 
 module.exports = (creep) => {
-    if (creep.memory.working == true && creep.carry.energy == 0) {
-        creep.memory.working = false;
+    if (creep.memory.upgrading && creep.carry.energy == 0) {
+        creep.memory.upgrading = false;
     }
-    else if (creep.memory.working == false && creep.carry.energy == creep.carryCapacity) {
-        creep.memory.working = true;
+    if (!creep.memory.upgrading && creep.carry.energy == creep.carryCapacity) {
+        creep.memory.upgrading = true;
     }
 
-
-    if (creep.memory.working == true) {
-        var damagedStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+    if (creep.memory.upgrading) {
+        //repairing
+        const damagedStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
         });
-
         if (damagedStructure != undefined) {
-            creep.say('repairing');
             if (creep.repair(damagedStructure) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(damagedStructure);
             }
         }
         else {
-            creep.say('RepBiuldMod');
+            creep.say('R -> B');
             roleBuilder.run(creep);
         }
     }
     else {
-        var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-        if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(source);
+        //harvesting
+        findEnergy(creep);
+        const sources = creep.room.find(FIND_SOURCES);
+        if (creep.harvest(sources[0]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[0]);
         }
     }
 };
