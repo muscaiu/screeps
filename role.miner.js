@@ -1,23 +1,22 @@
-var roleMiner = {
-    run: function(creep) {
-        var targets = creep.room.find(FIND_STRUCTURES, {
-            filter: (structure) => {
-                return (structure.structureType == STRUCTURE_CONTAINER) && (structure.store[RESOURCE_ENERGY] < structure.storeCapacity);
+const roleMiner = (creep) => {
+    const targets = creep.room.find(FIND_STRUCTURES, {
+        filter: (structure) => {
+            return (structure.structureType == STRUCTURE_CONTAINER) && (structure.store[RESOURCE_ENERGY] < structure.storeCapacity);
+        }
+    });
+   
+    if(targets.length > 0) {
+        if(creep.carry.energy < creep.carryCapacity){
+            const source = creep.pos.findClosestByPath(FIND_SOURCES);
+            if(creep.harvest(source) == ERR_NOT_IN_RANGE){
+                creep.moveTo(source);
             }
-        });
-       
-        if(targets.length > 0) {
-            if(creep.carry.energy < creep.carryCapacity){
-                var source = creep.pos.findClosestByPath(FIND_SOURCES);
-                if(creep.harvest(source) == ERR_NOT_IN_RANGE){
-                    creep.moveTo(source);
-                }
-            } else{
-                if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
-                    creep.moveTo(targets[0]);
-                }
+        } else{
+            if(creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE){
+                creep.moveTo(targets[0]);
             }
         }
     }
 };
+
 module.exports = roleMiner;

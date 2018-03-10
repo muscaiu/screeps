@@ -1,35 +1,31 @@
-const upgrade = require('upgrade.source');
+const findEnergy = require('find.energy');
+const roleUpgrader = require('role.upgrader');
 
-//build or upgrade(1)
-const roleBuilder = (creep) => {
-    const targets = creep.room.find(FIND_CONSTRUCTION_SITES);
+module.exports = (creep) => {
     if (creep.memory.building && creep.carry.energy == 0) {
         creep.memory.building = false;
-        creep.say('buildUpgr');
     }
     if (!creep.memory.building && creep.carry.energy == creep.carryCapacity) {
-        if(targets.length){
-            creep.say('🚧 building');
-            creep.memory.building = true;
+        creep.memory.building = true;
+    }
+
+    if (creep.memory.building) {
+        const constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+        if (constructionSite != undefined) {
+            if (creep.build(constructionSite) == ERR_NOT_IN_RANGE) {
+                  creep.moveTo(constructionSite);
+            }
         }else{
-            creep.say('buildMine');
-            creep.memory.building = false;
+            creep.say('B -> U')
+            roleUpgrader(creep);
         }
     }
-    
-    if (creep.memory.building) {
-        if (targets.length) {
-            if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
-            }else{
-                if(creep.carry.energy == 0){
-                    creep.memory.building = false;    
-                }
-            }
+    else {
+        findEnergy(creep);
+        const sources = creep.room.find(FIND_SOURCES);
+        if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+            creep.moveTo(sources[1]);
         }
-    } else {
-        upgrade(creep, 1)
     }
 };
-module.exports = roleBuilder;
 
