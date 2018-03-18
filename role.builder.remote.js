@@ -1,6 +1,16 @@
 const roleUpgrader = require('role.upgrader');
 
 module.exports = (creep) => {
+    // if in target room
+    if (creep.memory.target != undefined && creep.room.name != creep.memory.target) {
+        // find exit to target room
+        let exit = creep.room.findExitTo(creep.memory.target);
+        // move to exit
+        creep.moveTo(creep.pos.findClosestByRange(exit));
+        // return the function to not do anything else
+        return;
+    }
+
     if (creep.memory.working && creep.carry.energy == 0) {
         creep.memory.working = false;
     }

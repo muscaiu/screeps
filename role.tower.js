@@ -1,20 +1,20 @@
-const towerScript = (() => {
-  const tower1 = Game.getObjectById('5aa23224235f615d916107de');
+module.exports = () => {
+    
+    const towers = _.filter(Game.structures, s => s.structureType == STRUCTURE_TOWER);
 
-  if (tower1) {
-      let closestDamagedStructure = tower1.pos.findClosestByRange(FIND_STRUCTURES, {
-          filter: structure => structure.hits < structure.hitsMax,
-          filter: {structureType: STRUCTURE_CONTAINER}
-      });
-      if (closestDamagedStructure) {
-          tower1.repair(closestDamagedStructure);
-      }
-
-      let closestHostile = tower1.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-      if (closestHostile) {
-          tower1.attack(closestHostile);
-      }
-  }
-})()
-
-module.exports = towerScript;
+    for(let tower of towers){
+        //repair
+        let closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+            filter: s => s.hits < s.hitsMax,
+            filter: {structureType: STRUCTURE_CONTAINER}
+        });
+        if (closestDamagedStructure) {
+            tower.repair(closestDamagedStructure);
+        }
+        //attack
+        let closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS)
+        if (closestHostile) {
+            tower.attack(closestHostile);
+        }
+    }
+}
