@@ -14,6 +14,11 @@ module.exports = (creep) => {
         const damagedStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
         });
+
+        const giranDamagedStructure = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: (s) => s.hits < s.hitsMax && s.structureType != STRUCTURE_WALL
+        });
+
         if (damagedStructure != undefined) {
             if (creep.repair(damagedStructure) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(damagedStructure);
@@ -24,12 +29,35 @@ module.exports = (creep) => {
             roleBuilder(creep);
         }
     }
+    // else {
+    //     //harvesting
+    //     findEnergy(creep);
+    //     const sources = creep.room.find(FIND_SOURCES);
+    //     if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
+    //         creep.moveTo(sources[1]);
+    //     }
+    // }
     else {
-        //harvesting
-        findEnergy(creep);
-        const sources = creep.room.find(FIND_SOURCES);
-        if (creep.harvest(sources[1]) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(sources[1]);
+        // find closest container
+        let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
+            filter: s => s.structureType == STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0
+        });
+        // if one was found
+        if (container != undefined) {
+            // try to withdraw energy, if the container is not in range
+            if (creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                // move towards it
+                creep.moveTo(container);
+            }
+        }
+        else {
+            // find closest source
+            var source = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
+            // try to harvest energy, if the source is not in range
+            if (creep.harvest(source) == ERR_NOT_IN_RANGE) {
+                // move towards it
+                creep.moveTo(source);
+            }
         }
     }
 };

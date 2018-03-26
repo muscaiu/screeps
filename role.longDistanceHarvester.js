@@ -3,32 +3,35 @@ const roleBuilder = require('role.builder');
 module.exports =(creep) => {
     if (creep.memory.working && creep.carry.energy == 0) {
         creep.memory.working = false;
-        creep.say('LH !work')
+        // creep.say('LH !work')
     }
     if (!creep.memory.working && creep.carry.energy == creep.carryCapacity) {
         creep.memory.working = true;
-        creep.say('LH work')
+        // creep.say('LH work')
     }
     if (creep.memory.working == true) {
         if (creep.room.name == creep.memory.home) {
-            creep.say('ImHome')
+            // creep.say('W7N27')
             var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
                 filter: s => (s.structureType == STRUCTURE_SPAWN
                              || s.structureType == STRUCTURE_EXTENSION
                              || s.structureType == STRUCTURE_TOWER)
                              && s.energy < s.energyCapacity
             });
+            if(structure == undefined){
+                structure = creep.room.storage;
+            }
             if (structure != undefined) {
                 if (creep.transfer(structure, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(structure);
                 }
             }else{
-                creep.say('LD -> B');
+                // creep.say('LD -> Sto');
                 roleBuilder(creep);
             }
         }
         else {
-            creep.say('nextroom')
+            // creep.say('nextroom')
             var exit = creep.room.findExitTo(creep.memory.home);
             creep.moveTo(creep.pos.findClosestByRange(exit));
         }
@@ -41,7 +44,7 @@ module.exports =(creep) => {
             }
         }
         else {
-            creep.say('GoWork')
+            // creep.say('W8N27')
             var exit = creep.room.findExitTo(creep.memory.target);
             creep.moveTo(creep.pos.findClosestByRange(exit));
         }

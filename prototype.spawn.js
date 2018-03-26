@@ -1,79 +1,165 @@
 module.exports = {
-    normal: (creepRole, creepLimit, myEnergy, target) => {
-        const totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == creepRole);
+    harvester: (spawn, creepRole) => {
+        const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+          
+        // console.log(`${spawn.name} new  mini-${creepRole}: ${newName}`);
         
-        if (totalCreeps.length < creepLimit) {
-            const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
-            let numberOfParts = Math.floor(myEnergy / 200);
-            let creepBody = [];
-            
-            for(let i = 0; i < numberOfParts; i++){
-                creepBody.push(WORK);
+        spawn.spawnCreep(
+            [WORK, CARRY, MOVE],
+            newName,
+            { memory: {
+                role: creepRole
+                }
             }
-            for(let i = 0; i < numberOfParts; i++){
-                creepBody.push(CARRY);
+        )
+    },
+    repairer: (spawn, creepRole) => {
+        const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+        spawn.spawnCreep(
+            [WORK, CARRY, MOVE],
+            newName,
+            { memory: {
+                role: creepRole
+                }
             }
-            for(let i = 0; i < numberOfParts; i++){
-                creepBody.push(MOVE);
-            }
-            
-            // Game.spawns['Aden'].spawnCreep(creepBody, newName, {role: creepRole, working : false})
-            Game.spawns['Aden'].spawnCreep(
-                creepBody,
-                newName,
-                { memory: {
-                    role: creepRole, 
-                    target 
-                    
-                } 
-            })
-            console.log(`Spawning new  ${creepRole}: ${newName}`);
-            console.log(`nr of parts  ${numberOfParts} ${creepBody} myEnergy: ${myEnergy}`);
+        )
+    },
+    upgrader: (spawn, creepRole, myEnergy) => {
+        const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+        let numberOfParts = Math.floor(myEnergy / 200);
+        let creepBody = [];
+        
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(WORK);
         }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(CARRY);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(MOVE);
+        }
+        
+        spawn.spawnCreep(
+            creepBody,
+            newName,
+            { memory: {
+                role: creepRole
+            } 
+        })
+    },
+    builder: (spawn, creepRole, myEnergy) => {
+        const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+        let numberOfParts = Math.floor(myEnergy / 200);
+        let creepBody = [];
+        
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(WORK);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(CARRY);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(MOVE);
+        }
+        
+        spawn.spawnCreep(
+            creepBody,
+            newName,
+            { memory: {
+                role: creepRole
+            } 
+        })
     },
     longDistance: (
-        creepRole, 
-        creepLimit, 
+        spawn,
+        creepRole,
         myEnergy, 
-        workParts, 
         home, 
         target, 
-        sourceIndex
+        sourceIndex,
         ) => {
-        const totalCreeps = _.filter(Game.creeps, (creep) => creep.memory.role == creepRole);
+        const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+        let creepBody = [];
+        let numberOfParts = Math.floor((myEnergy -700) / 200)
         
-        if (totalCreeps.length < creepLimit) {
-            const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
-            let creepBody = [];
-            let numberOfParts = Math.floor((myEnergy -700) / 200)
-            
-            for(let i = 0; i < numberOfParts; i++){
-                creepBody.push(WORK);
-            }
-            
-            console.log(`before Spawning new  ${creepRole}: ${newName} ${myEnergy}`);
-            myEnergy -= 250 * workParts;
-            console.log(`after Spawning new  ${creepRole}: ${newName} ${myEnergy}`);
-            
-            for(let i = 0; i < numberOfParts; i++){
-                creepBody.push(CARRY);
-            }
-            for(let i = 0; i < numberOfParts + workParts; i++){
-                creepBody.push(MOVE);
-            }
-
-            console.log(`nr of parts  ${numberOfParts} ${creepBody} myEnergy: ${myEnergy}`);
-            // Game.spawns['Aden'].spawnCreep(creepBody, newName, {role: creepRole, working : false})
-            Game.spawns['Aden'].spawnCreep(creepBody, newName, {
-                memory: { 
-                    role: creepRole ,
-                    home,
-                    target,
-                    sourceIndex
-                } 
-            })
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(WORK);
         }
-    }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(CARRY);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(MOVE);
+        }
+
+        spawn.spawnCreep(creepBody, newName, {
+            memory: { 
+                role: creepRole ,
+                home,
+                target,
+                sourceIndex
+            } 
+        })
+    },
+    createMiner: (spawn, sourceId, myEnergy) => {
+        const newName = `miner-${Game.time.toString().substring(4,8)}`;
+        spawn.spawnCreep(
+            [WORK, WORK, WORK, WORK, WORK, MOVE], 
+            newName,
+            {
+                memory: {
+                    role: 'miner', 
+                    sourceId
+                }
+            }
+        )
+        // console.log(`${spawn.name} Spawning new miner myEnergy ${myEnergy}`);
+    },
+    createHauler: (spawn, creepRole, myEnergy) => {
+        const newName = `hauler-${Game.time.toString().substring(4,8)}`;
+        let numberOfParts = Math.floor((myEnergy) / 150)
+        let creepBody = [];
+        
+        for(let i = 0; i < numberOfParts * 2; i++){
+            creepBody.push(CARRY);
+        }
+        for(let i = 0; i < numberOfParts ; i++){
+            creepBody.push(MOVE);
+        }
+        spawn.spawnCreep(
+            creepBody,
+            newName,
+            { memory: {
+                role: creepRole,
+                working: false
+            } 
+        })
+    },
+    remoteBuilder: (creepRole, target, myEnergy) => {
+        const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+        let numberOfParts = Math.floor(myEnergy / 200);
+        let creepBody = [];
+        
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(WORK);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(CARRY);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(MOVE);
+        }
+        
+        Game.spawns['Aden'].spawnCreep(
+            creepBody,
+            newName,
+            { memory: {
+                role: creepRole,
+                target
+            } 
+        })
+    },
+    
 }
 
 // module.exports = () => {
