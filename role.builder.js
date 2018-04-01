@@ -32,7 +32,7 @@ module.exports = (creep) => {
         let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
             filter: s => (s.structureType == STRUCTURE_CONTAINER||
                     s.structureType == STRUCTURE_STORAGE)
-                    && s.store[RESOURCE_ENERGY] > 0
+                    && s.store[RESOURCE_ENERGY] > 500
         });
         // if one was found
         if (container != undefined) {

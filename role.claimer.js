@@ -1,6 +1,6 @@
 module.exports =(creep) => {
-    
-    //SPAWNING THE CLAIMER
+    // MOVE THIS COMMENTED CODE TO MAIN.JS
+    //SPAWNING THE CLAIMER MUST DO MANUALLY
     // DO THIS IN CONSOLE BEFORE RUNING THIS CODE
     
     //Game.spawns.Aden.memory.claimRoom = 'W8N27';
@@ -13,11 +13,11 @@ module.exports =(creep) => {
     //             }
     //         });
     // }
-    
     // DO THIS IN CONSOLE AFTER SPAWNING THE CLAIMER
     // delete Game.spawns.Aden.memory.claimRoom
     
-    //THE ROLE
+    
+    //THE ROLE (keep code here)
     if (creep.room.name != creep.memory.target) {
         //move to target room
         let exit = creep.room.findExitTo(creep.memory.target);

@@ -13,7 +13,8 @@ module.exports = (creep) => {
         var structure = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
             filter: (s) => (s.structureType == STRUCTURE_SPAWN
                             || s.structureType == STRUCTURE_EXTENSION
-                            || s.structureType == STRUCTURE_TOWER)
+                            || s.structureType == STRUCTURE_TOWER
+                            )
                             && s.energy < s.energyCapacity
         });
         
@@ -26,7 +27,7 @@ module.exports = (creep) => {
                 creep.moveTo(structure);
             }
         }else{
-            creep.say('H->Store');
+            creep.say('H->Build');
             roleBuilder(creep);
         }
     }
@@ -44,4 +45,11 @@ module.exports = (creep) => {
             creep.moveTo(source);
         }
     }
+    
+    // if(creep.room.controller) {
+    //     if(creep.signController(creep.room.controller, 
+    //     "Sir, we are surrounded! Excellent, now we can attack in any direction!") == ERR_NOT_IN_RANGE) {
+    //         creep.moveTo(creep.room.controller);
+    //     }
+    // }
 }

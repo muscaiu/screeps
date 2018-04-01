@@ -11,6 +11,9 @@ const roleMiner = (creep) => {
         creep.moveTo(container);
     }
     
+    
+    
+    
     // const targets = creep.room.find(FIND_STRUCTURES, {
     //     filter: (structure) => {
     //         return (structure.structureType == STRUCTURE_CONTAINER) && (structure.store[RESOURCE_ENERGY] < structure.storeCapacity);

@@ -13,16 +13,28 @@ module.exports = {
             }
         )
     },
-    repairer: (spawn, creepRole) => {
+    repairer: (spawn, creepRole, myEnergy) => {
         const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+        let numberOfParts = Math.floor(myEnergy / 200);
+        let creepBody = [];
+        
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(WORK);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(CARRY);
+        }
+        for(let i = 0; i < numberOfParts; i++){
+            creepBody.push(MOVE);
+        }
+        
         spawn.spawnCreep(
-            [WORK, CARRY, MOVE],
+            creepBody,
             newName,
             { memory: {
                 role: creepRole
-                }
-            }
-        )
+            } 
+        })
     },
     upgrader: (spawn, creepRole, myEnergy) => {
         const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
@@ -80,7 +92,8 @@ module.exports = {
         ) => {
         const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
         let creepBody = [];
-        let numberOfParts = Math.floor((myEnergy -700) / 200)
+        // let numberOfParts = Math.floor((myEnergy -300) / 200)
+        let numberOfParts = Math.floor(myEnergy / 200)
         
         for(let i = 0; i < numberOfParts; i++){
             creepBody.push(WORK);
@@ -113,7 +126,6 @@ module.exports = {
                 }
             }
         )
-        // console.log(`${spawn.name} Spawning new miner myEnergy ${myEnergy}`);
     },
     createHauler: (spawn, creepRole, myEnergy) => {
         const newName = `hauler-${Game.time.toString().substring(4,8)}`;
@@ -135,7 +147,7 @@ module.exports = {
             } 
         })
     },
-    remoteBuilder: (creepRole, target, myEnergy) => {
+    remoteBuilder: (spawn, creepRole, target, myEnergy) => {
         const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
         let numberOfParts = Math.floor(myEnergy / 200);
         let creepBody = [];
@@ -150,17 +162,28 @@ module.exports = {
             creepBody.push(MOVE);
         }
         
-        Game.spawns['Aden'].spawnCreep(
+        spawn.spawnCreep(
             creepBody,
             newName,
             { memory: {
                 role: creepRole,
+                madeIn: spawn.name,
                 target
             } 
         })
     },
     
 }
+//BASIC creep
+// const newName = `${creepRole}-${Game.time.toString().substring(4,8)}`;
+// spawn.spawnCreep(
+//     [WORK, CARRY, MOVE],
+//     newName,
+//     { memory: {
+//         role: creepRole
+//         }
+//     }
+// )
 
 // module.exports = () => {
     // StructureSpawn.prototype.createCustomCreep = (myEnergy, roleName) => {
